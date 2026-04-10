@@ -1,4 +1,4 @@
-from functions import Get_Weather
+from functions import GetWeather
 
 city = input("Digite o nome da cidade: ")
-print(Get_Weather(city))
+print(GetWeather(city))
