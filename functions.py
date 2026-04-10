@@ -3,9 +3,9 @@ from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 from geopy.geocoders import Nominatim
 
 
-def Get_Weather(city):
+def GetWeather(city):
     try:
-        cityData = Get_Data(city)
+        cityData = GetCityData(city)
     except (GeocoderUnavailable, GeocoderTimedOut):
         return "Não foi possível estabelecer conexão."
     except InvalidLocation:
@@ -16,16 +16,16 @@ def Get_Weather(city):
     name = cityData["name"]
 
     try:
-        data = Fetch_Api(Create_Url(lat, lon))
+        data = FetchApi(CreateUrl(lat, lon))
     except requests.exceptions.RequestException:
         return "Erro ao receber dados."
 
     temp = data["current"]["temperature_2m"]
 
-    return f"Temperatura atual em {name}: {temp}°C {Get_Emoji(temp)}"
+    return f"Temperatura atual em {name}: {temp}°C {GetEmoji(temp)}"
 
 
-def Get_Data(city):
+def GetCityData(city):
     if not city.strip():
         raise InvalidLocation
 
@@ -48,17 +48,17 @@ def Get_Data(city):
     }
 
 
-def Create_Url(lat, lon):
+def CreateUrl(lat, lon):
     return f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m"
 
 
-def Fetch_Api(url):
+def FetchApi(url):
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
 
 
-def Get_Emoji(temp):
+def GetEmoji(temp):
     match temp:
         case temp if 15 >= temp:
             return "🥶"
